@@ -170,7 +170,7 @@ static void got_mode_event(char *event) {
 
 static void got_window_event(char *event) {
     DLOG("Got window event!\n%s\n", event);
-//    parse_window_json(event);
+    parse_window_json(event);
     draw_bars(false);
 }
 

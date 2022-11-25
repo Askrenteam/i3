@@ -2071,7 +2071,8 @@ void draw_bars(bool unhide) {
                 DLOG("Drawing button for WS %s at x = %d, len = %d\n",
                      i3string_as_utf8(ws_walk->name), workspace_width, ws_walk->name_width);
                 color_t fg_color = colors.inactive_ws_fg;
-                color_t bg_color = (color_t){.red = colors.inactive_ws_bg.red + 0.1 * ws_walk->num, .green = colors.inactive_ws_bg.green + 0.05 * ws_walk->num, .blue = colors.inactive_ws_bg.blue, .alpha = 1.0};
+//                color_t bg_color = (color_t){.red = colors.inactive_ws_bg.red + 0.1 * ws_walk->num, .green = colors.inactive_ws_bg.green + 0.05 * ws_walk->num, .blue = colors.inactive_ws_bg.blue, .alpha = 1.0};
+                color_t bg_color = colors.inactive_ws_bg;
                 color_t border_color = colors.inactive_ws_border;
                 if (ws_walk->visible) {
                     if (!ws_walk->focused) {
@@ -2102,8 +2103,8 @@ void draw_bars(bool unhide) {
                 if (TAILQ_NEXT(ws_walk, tailq) != NULL)
                     workspace_width += logical_px(ws_spacing_px);
             }
-            draw_util_text(bar_name, &(outputs_walk->buffer), colors.bar_fg, colors.bar_bg, workspace_width,
-                           bar_height / 2 - font.height / 2, 100);
+            draw_util_text(bar_name, &(outputs_walk->buffer), colors.bar_fg, colors.bar_bg, workspace_width + logical_px(5),
+                           bar_height / 2 - font.height / 2, 1000);
         }
 
         if (binding.name && !config.disable_binding_mode_indicator) {
@@ -2192,5 +2193,6 @@ void set_bar_color(color_t color) {
 }
 
 void set_bar_name(i3String *name) {
+    DLOG("setting bar name %s", i3string_as_utf8(name));
     bar_name = name;
 }

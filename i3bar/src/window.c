@@ -19,7 +19,7 @@ struct window_json_params {
     char *json;
     char *cur_key;
     char *name;
-    bar_title_t *bar_title;
+    bar_title *bar_title;
 };
 
 /*
@@ -28,7 +28,6 @@ struct window_json_params {
  */
 static int window_string_cb(void *params_, const unsigned char *val, size_t len) {
     struct window_json_params *params = (struct window_json_params *)params_;
-
     if (!strcmp(params->cur_key, "name")) {
         sasprintf(&(params->name), "%.*s", len, val);
         FREE(params->cur_key);
@@ -36,15 +35,7 @@ static int window_string_cb(void *params_, const unsigned char *val, size_t len)
     }
 
     FREE(params->cur_key);
-    return 0;
-}
-
-/*
- * Parse a boolean.
- *
- */
-static int window_boolean_cb(void *params_, int val) {
-    return 0;
+    return 1;
 }
 
 /*
@@ -77,9 +68,8 @@ static int window_end_map_cb(void *params_) {
 /* A datastructure to pass all these callbacks to yajl */
 static yajl_callbacks window_callbacks = {
     .yajl_string = window_string_cb,
-    .yajl_boolean = window_boolean_cb,
     .yajl_map_key = window_map_key_cb,
-    .yajl_end_map = window_end_map_cb,
+    .yajl_end_map = window_end_map_cb
 };
 
 /*
@@ -115,15 +105,7 @@ void parse_window_json(char *json) {
             break;
     }
 
-    /* We don't want to indicate default binding mode */
-//    if (strcmp("default", i3string_as_utf8(params.mode->name)) == 0)
-//        I3STRING_FREE(params.mode->name);
-
-//    /* Set the new binding mode */
-//    set_current_mode(&binding);
-//
-
-    set_bar_name(bar_title.name)
+    set_bar_name(bar_title.name);
     yajl_free(handle);
 
     FREE(params.cur_key);
