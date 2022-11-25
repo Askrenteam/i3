@@ -864,6 +864,24 @@ CFGFUN(bar_color_single, const char *colorclass, const char *color) {
         current_bar->colors.focused_background = sstrdup(color);
     else if (strcmp(colorclass, "focused_separator") == 0)
         current_bar->colors.focused_separator = sstrdup(color);
+    else if (strcmp(colorclass, "ws_color_1") == 0)
+        current_bar->colors.ws_color_1 = sstrdup(color);
+    else if (strcmp(colorclass, "ws_color_2") == 0)
+        current_bar->colors.ws_color_2 = sstrdup(color);
+    else if (strcmp(colorclass, "ws_color_3") == 0)
+        current_bar->colors.ws_color_3 = sstrdup(color);
+    else if (strcmp(colorclass, "ws_color_4") == 0)
+        current_bar->colors.ws_color_4 = sstrdup(color);
+    else if (strcmp(colorclass, "ws_color_5") == 0)
+        current_bar->colors.ws_color_5 = sstrdup(color);
+    else if (strcmp(colorclass, "ws_color_6") == 0)
+        current_bar->colors.ws_color_6 = sstrdup(color);
+    else if (strcmp(colorclass, "ws_color_7") == 0)
+        current_bar->colors.ws_color_7 = sstrdup(color);
+    else if (strcmp(colorclass, "ws_color_8") == 0)
+        current_bar->colors.ws_color_8 = sstrdup(color);
+    else if (strcmp(colorclass, "ws_color_9") == 0)
+        current_bar->colors.ws_color_9 = sstrdup(color);
     else
         current_bar->colors.focused_statusline = sstrdup(color);
 }

@@ -523,12 +523,14 @@ state TITLE_WINDOW_ICON_PADDING:
   padding = number
     ->
 
-# bar (hidden_state hide|show|toggle)|(mode dock|hide|invisible|toggle) [<bar_id>]
+# bar (hidden_state hide|show|toggle)|(mode dock|hide|invisible|toggle)|(background_color <color>) [<bar_id>]
 state BAR:
   'hidden_state'
       -> BAR_HIDDEN_STATE
   'mode'
       -> BAR_MODE
+  'background_color'
+      -> BAR_BACKGROUND_COLOR
 
 state BAR_HIDDEN_STATE:
   bar_value = 'hide', 'show', 'toggle'
@@ -549,3 +551,13 @@ state BAR_MODE_ID:
       ->
   end
       -> call cmd_bar_mode($bar_value, $bar_id)
+
+state BAR_BACKGROUND_COLOR:
+  bar_value = word
+      -> BAR_BACKGROUND_COLOR_ID
+
+state BAR_BACKGROUND_COLOR_ID:
+  bar_id = word
+      ->
+  end
+      -> call cmd_bar_background_color($bar_value, $bar_id)

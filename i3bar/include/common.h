@@ -87,6 +87,7 @@ extern TAILQ_HEAD(statusline_head, status_block) statusline_head;
 #include "outputs.h"
 #include "util.h"
 #include "workspaces.h"
+//#include "window.h"
 #include "mode.h"
 #include "trayclients.h"
 #include "xcb.h"

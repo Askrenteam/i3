@@ -321,6 +321,12 @@ void cmd_bar_mode(I3_CMD, const char *bar_mode, const char *bar_id);
 void cmd_bar_hidden_state(I3_CMD, const char *bar_hidden_state, const char *bar_id);
 
 /**
+ * Implementation of 'bar background_color <color> [<bar_id>]'
+ *
+ */
+void cmd_bar_background_color(I3_CMD, const char *bar_bg_color, const char *bar_id);
+
+/**
  * Implementation of 'shmlog <size>|toggle|on|off'
  *
  */

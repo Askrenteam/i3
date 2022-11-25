@@ -891,6 +891,15 @@ static void dump_bar_config(yajl_gen gen, Barconfig *config) {
     YSTR_IF_SET(binding_mode_border);
     YSTR_IF_SET(binding_mode_bg);
     YSTR_IF_SET(binding_mode_text);
+    YSTR_IF_SET(ws_color_1);
+    YSTR_IF_SET(ws_color_2);
+    YSTR_IF_SET(ws_color_3);
+    YSTR_IF_SET(ws_color_4);
+    YSTR_IF_SET(ws_color_5);
+    YSTR_IF_SET(ws_color_6);
+    YSTR_IF_SET(ws_color_7);
+    YSTR_IF_SET(ws_color_8);
+    YSTR_IF_SET(ws_color_9);
     y(map_close);
 
     y(map_close);
@@ -1160,7 +1169,7 @@ IPC_HANDLER(get_bar_config) {
     const unsigned char *payload;
     ylength length;
     y(get_buf, &payload, &length);
-
+    LOG("RMLOG -- sending config payload: %s", payload);
     ipc_send_client_message(client, length, I3_IPC_REPLY_TYPE_BAR_CONFIG, payload);
     y(free);
 }

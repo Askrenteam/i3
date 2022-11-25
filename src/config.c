@@ -107,6 +107,15 @@ static void free_configuration(void) {
         FREE(barconfig->status_command);
         FREE(barconfig->i3bar_command);
         FREE(barconfig->font);
+        FREE(barconfig->colors.ws_color_1);
+        FREE(barconfig->colors.ws_color_2);
+        FREE(barconfig->colors.ws_color_3);
+        FREE(barconfig->colors.ws_color_4);
+        FREE(barconfig->colors.ws_color_5);
+        FREE(barconfig->colors.ws_color_6);
+        FREE(barconfig->colors.ws_color_7);
+        FREE(barconfig->colors.ws_color_8);
+        FREE(barconfig->colors.ws_color_9);
         FREE(barconfig->colors.background);
         FREE(barconfig->colors.statusline);
         FREE(barconfig->colors.separator);

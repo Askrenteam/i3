@@ -397,6 +397,16 @@ struct Barconfig {
         char *binding_mode_border;
         char *binding_mode_bg;
         char *binding_mode_text;
+
+        char *ws_color_1;
+        char *ws_color_2;
+        char *ws_color_3;
+        char *ws_color_4;
+        char *ws_color_5;
+        char *ws_color_6;
+        char *ws_color_7;
+        char *ws_color_8;
+        char *ws_color_9;
     } colors;
 
     TAILQ_ENTRY(Barconfig) configs;

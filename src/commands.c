@@ -2328,6 +2328,43 @@ void cmd_bar_hidden_state(I3_CMD, const char *bar_hidden_state, const char *bar_
     }
 }
 
+void cmd_bar_background_color(I3_CMD, const char *bar_bg_color, const char *bar_id) {
+    if (TAILQ_EMPTY(&barconfigs)) {
+        yerror("No bars found\n");
+        return;
+    }
+
+    Barconfig *current = NULL;
+    TAILQ_FOREACH (current, &barconfigs, configs) {
+        if (bar_id && strcmp(current->id, bar_id) != 0) {
+            continue;
+        }
+
+        if (strcmp(current->colors.background, bar_bg_color) != 0) {
+            DLOG("Changing bar background color of bar_id '%s' from '%s' to '%s'\n",
+                 current->id, current->colors.background, bar_bg_color);
+            strcpy(current->colors.background, bar_bg_color);
+            ipc_send_barconfig_update_event(current);
+        }
+
+        if (bar_id) {
+            /* We are looking for a specific bar and we found it */
+            ysuccess(true);
+            return;
+        }
+    }
+
+    if (bar_id) {
+        /* We are looking for a specific bar and we did not find it */
+        yerror("Changing bar hidden_state of bar_id %s failed, bar_id not found.\n", bar_id);
+    } else {
+        /* We have already handled the case of no bars, so we must have
+         * updated all active bars now. */
+        ysuccess(true);
+    }
+
+}
+
 /*
  * Implementation of 'shmlog <size>|toggle|on|off'
  *

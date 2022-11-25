@@ -80,6 +80,9 @@ bool activated_mode = false;
 /* The output in which the tray should be displayed. */
 static i3_output *output_for_tray;
 
+/* The bar background color */
+static color_t bar_custom_bg;
+
 /* The parsed colors */
 struct xcb_colors_t {
     color_t bar_fg;
@@ -103,8 +106,20 @@ struct xcb_colors_t {
     color_t binding_mode_bg;
     color_t binding_mode_fg;
     color_t binding_mode_border;
+    TAILQ_HEAD(ws_colors_head, color_t) ws_colors;
+    color_t ws_color_1;
+    color_t ws_color_2;
+    color_t ws_color_3;
+    color_t ws_color_4;
+    color_t ws_color_5;
+    color_t ws_color_6;
+    color_t ws_color_7;
+    color_t ws_color_8;
+    color_t ws_color_9;
 };
 struct xcb_colors_t colors;
+
+static i3String *bar_name;
 
 /* Horizontal offset between a workspace label and button borders */
 static const int ws_hoff_px = 4;
@@ -240,6 +255,7 @@ static void draw_statusline(i3_output *output, uint32_t clip_left, bool use_focu
     struct status_block *block;
 
     color_t bar_color = (use_focus_colors ? colors.focus_bar_bg : colors.bar_bg);
+//    color_t bar_color =  (color_t){.red = 0.5, .green = 0.0, .blue = 0.0, .alpha = 1.0};
     draw_util_clear_surface(&output->statusline_buffer, bar_color);
 
     /* Use unsigned integer wraparound to clip off the left side.
@@ -295,7 +311,6 @@ static void draw_statusline(i3_output *output, uint32_t clip_left, bool use_focu
                                 x, logical_px(1),
                                 full_render_width,
                                 bar_height - logical_px(2));
-
             /* Draw the background. */
             draw_util_rectangle(&output->statusline_buffer, bg_color,
                                 x + has_border * logical_px(block->border_left),
@@ -303,7 +318,7 @@ static void draw_statusline(i3_output *output, uint32_t clip_left, bool use_focu
                                 full_render_width - has_border * logical_px(block->border_right + block->border_left),
                                 bar_height - has_border * logical_px(block->border_bottom + block->border_top) - logical_px(2));
         }
-
+//        LOG("draw text %s\n", i3string_as_utf8(text));
         draw_util_text(text, &output->statusline_buffer, fg_color, bg_color,
                        x + render->x_offset + has_border * logical_px(block->border_left),
                        bar_height / 2 - font.height / 2,
@@ -407,6 +422,19 @@ void init_colors(const struct xcb_color_strings_t *new_colors) {
     PARSE_COLOR(focus_ws_fg, "#FFFFFF");
     PARSE_COLOR(focus_ws_bg, "#285577");
     PARSE_COLOR(focus_ws_border, "#4c7899");
+    PARSE_COLOR(ws_color_1, "#00FFFF");
+    PARSE_COLOR(ws_color_2, "#00FFFF");
+    PARSE_COLOR(ws_color_3, "#00FFFF");
+    PARSE_COLOR(ws_color_4, "#00FFFF");
+    PARSE_COLOR(ws_color_5, "#00FFFF");
+    PARSE_COLOR(ws_color_6, "#00FFFF");
+    PARSE_COLOR(ws_color_7, "#00FFFF");
+    PARSE_COLOR(ws_color_8, "#00FFFF");
+    PARSE_COLOR(ws_color_9, "#00FFFF");
+//    TAILQ_INIT(colors.ws_colors);
+//    TAILQ_INSERT_TAIL(colors.ws_colors, colors.ws_color_1, )
+
+
 #undef PARSE_COLOR
 
 #define PARSE_COLOR_FALLBACK(name, fallback)                                                         \
@@ -427,6 +455,7 @@ void init_colors(const struct xcb_color_strings_t *new_colors) {
     PARSE_COLOR_FALLBACK(focus_sep_fg, sep_fg);
 #undef PARSE_COLOR_FALLBACK
 
+    bar_custom_bg = colors.bar_bg;
     init_tray_colors();
     xcb_flush(xcb_connection);
 }
@@ -1296,6 +1325,8 @@ char *init_xcb_early(void) {
     /* Now we get the atoms and save them in a nice data structure */
     get_atoms();
 
+    bar_name = i3string_from_utf8("");
+
     char *path = root_atom_contents("I3_SOCKET_PATH", xcb_connection, screen);
 
     return path;
@@ -2011,6 +2042,7 @@ static void draw_button(surface_t *surface, color_t fg_color, color_t bg_color, 
  */
 void draw_bars(bool unhide) {
     DLOG("Drawing bars...\n");
+    /* LOG("(%f,%f,%f)\n", colors.ws_color_1.red, colors.ws_color_1.green, colors.ws_color_1.blue); */
 
     uint32_t full_statusline_width = predict_statusline_length(false);
     uint32_t short_statusline_width = predict_statusline_length(true);
@@ -2031,7 +2063,7 @@ void draw_bars(bool unhide) {
         bool use_focus_colors = output_has_focus(outputs_walk);
 
         /* First things first: clear the backbuffer */
-        draw_util_clear_surface(&(outputs_walk->buffer), (use_focus_colors ? colors.focus_bar_bg : colors.bar_bg));
+        draw_util_clear_surface(&(outputs_walk->buffer), (use_focus_colors ? colors.focus_bar_bg : bar_custom_bg));
 
         if (!config.disable_ws) {
             i3_ws *ws_walk;
@@ -2039,7 +2071,7 @@ void draw_bars(bool unhide) {
                 DLOG("Drawing button for WS %s at x = %d, len = %d\n",
                      i3string_as_utf8(ws_walk->name), workspace_width, ws_walk->name_width);
                 color_t fg_color = colors.inactive_ws_fg;
-                color_t bg_color = colors.inactive_ws_bg;
+                color_t bg_color = (color_t){.red = colors.inactive_ws_bg.red + 0.1 * ws_walk->num, .green = colors.inactive_ws_bg.green + 0.05 * ws_walk->num, .blue = colors.inactive_ws_bg.blue, .alpha = 1.0};
                 color_t border_color = colors.inactive_ws_border;
                 if (ws_walk->visible) {
                     if (!ws_walk->focused) {
@@ -2050,6 +2082,8 @@ void draw_bars(bool unhide) {
                         fg_color = colors.focus_ws_fg;
                         bg_color = colors.focus_ws_bg;
                         border_color = colors.focus_ws_border;
+//                        Con *container = get_existing_workspace_by_num(ws_walk->num)
+                        /* LOG("%s\n", i3string_as_utf8(window_name)); */
                     }
                 }
                 if (ws_walk->urgent) {
@@ -2068,6 +2102,8 @@ void draw_bars(bool unhide) {
                 if (TAILQ_NEXT(ws_walk, tailq) != NULL)
                     workspace_width += logical_px(ws_spacing_px);
             }
+            draw_util_text(bar_name, &(outputs_walk->buffer), colors.bar_fg, colors.bar_bg, workspace_width,
+                           bar_height / 2 - font.height / 2, 100);
         }
 
         if (binding.name && !config.disable_binding_mode_indicator) {
@@ -2149,4 +2185,12 @@ void set_current_mode(struct mode *current) {
     I3STRING_FREE(binding.name);
     binding = *current;
     activated_mode = binding.name != NULL;
+}
+
+void set_bar_color(color_t color) {
+    bar_custom_bg = color;
+}
+
+void set_bar_name(i3String *name) {
+    bar_name = name;
 }

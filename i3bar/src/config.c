@@ -256,6 +256,15 @@ static int config_string_cb(void *params_, const unsigned char *val, size_t _len
     COLOR(binding_mode_border, binding_mode_border);
     COLOR(binding_mode_bg, binding_mode_bg);
     COLOR(binding_mode_text, binding_mode_fg);
+    COLOR(ws_color_1, ws_color_1);
+    COLOR(ws_color_2, ws_color_2);
+    COLOR(ws_color_3, ws_color_3);
+    COLOR(ws_color_4, ws_color_4);
+    COLOR(ws_color_5, ws_color_5);
+    COLOR(ws_color_6, ws_color_6);
+    COLOR(ws_color_7, ws_color_7);
+    COLOR(ws_color_8, ws_color_8);
+    COLOR(ws_color_9, ws_color_9);
 
     printf("got unexpected string %.*s for cur_key = %s\n", len, val, cur_key);
 
@@ -470,5 +479,15 @@ void free_colors(struct xcb_color_strings_t *colors) {
     FREE_COLOR(binding_mode_fg);
     FREE_COLOR(binding_mode_bg);
     FREE_COLOR(binding_mode_border);
+    FREE_COLOR(ws_color_1);
+    FREE_COLOR(ws_color_2);
+    FREE_COLOR(ws_color_3);
+    FREE_COLOR(ws_color_4);
+    FREE_COLOR(ws_color_5);
+    FREE_COLOR(ws_color_6);
+    FREE_COLOR(ws_color_7);
+    FREE_COLOR(ws_color_8);
+    FREE_COLOR(ws_color_9);
+
 #undef FREE_COLOR
 }

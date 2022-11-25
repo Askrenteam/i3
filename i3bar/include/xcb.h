@@ -48,6 +48,16 @@ struct xcb_color_strings_t {
     char *binding_mode_bg;
     char *binding_mode_fg;
     char *binding_mode_border;
+
+    char *ws_color_1;
+    char *ws_color_2;
+    char *ws_color_3;
+    char *ws_color_4;
+    char *ws_color_5;
+    char *ws_color_6;
+    char *ws_color_7;
+    char *ws_color_8;
+    char *ws_color_9;
 };
 
 typedef struct xcb_colors_t xcb_colors_t;
@@ -143,3 +153,5 @@ void redraw_bars(void);
  *
  */
 void set_current_mode(struct mode *mode);
+
+void set_bar_name(i3String *name);

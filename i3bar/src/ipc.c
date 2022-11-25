@@ -42,6 +42,7 @@ static void got_command_reply(char *reply) {
 static void got_workspace_reply(char *reply) {
     DLOG("Got workspace data!\n");
     parse_workspaces_json(reply);
+//    set_bar_color((color_t){.red =  , .green = 0.5, .blue = 0.0, .alpha = 1.0});
     draw_bars(false);
 }
 
@@ -167,6 +168,12 @@ static void got_mode_event(char *event) {
     draw_bars(false);
 }
 
+static void got_window_event(char *event) {
+    DLOG("Got window event!\n%s\n", event);
+//    parse_window_json(event);
+    draw_bars(false);
+}
+
 static bool strings_differ(char *a, char *b) {
     const bool a_null = (a == NULL);
     const bool b_null = (b == NULL);
@@ -229,7 +236,7 @@ handler_t event_handlers[] = {
     &got_workspace_event,
     &got_output_event,
     &got_mode_event,
-    NULL,
+    &got_window_event,
     &got_bar_config_update,
 };
 
@@ -377,8 +384,8 @@ void destroy_connection(void) {
  */
 void subscribe_events(void) {
     if (config.disable_ws) {
-        i3_send_msg(I3_IPC_MESSAGE_TYPE_SUBSCRIBE, "[ \"output\", \"mode\", \"barconfig_update\" ]");
+        i3_send_msg(I3_IPC_MESSAGE_TYPE_SUBSCRIBE, "[ \"output\", \"mode\", \"barconfig_update\", \"window\" ]");
     } else {
-        i3_send_msg(I3_IPC_MESSAGE_TYPE_SUBSCRIBE, "[ \"workspace\", \"output\", \"mode\", \"barconfig_update\" ]");
+        i3_send_msg(I3_IPC_MESSAGE_TYPE_SUBSCRIBE, "[ \"workspace\", \"output\", \"mode\", \"barconfig_update\", \"window\" ]");
     }
 }
